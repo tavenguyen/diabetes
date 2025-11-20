@@ -1,5 +1,8 @@
 from pgmpy.models import DiscreteBayesianNetwork as BayesianNetwork
 from pgmpy.factors.discrete import TabularCPD
+from pgmpy.estimators import MaximumLikelihoodEstimator
+from pgmpy.inference import VariableElimination
+
 from typing import Any
 import pandas as pd
 import numpy as np
@@ -37,12 +40,45 @@ def getThreshold(key: Any):
         case _:
             return 0.0
 
+def process(evidence : dict):
+    for key in evidence:
+        evidence[key] = int(evidence[key] >= getThreshold(key))
+
+# Read CSV
+df = pd.read_csv("diabetes_dataset.csv")
+total_samples = len(df)
+
+# Nodes
+df['Glucose'] = (df['Glucose'] >= GLUCOSE_THRESHOLD).astype(int)
+df['BMI'] = (df['BMI'] >= BMI_THRESHOLD).astype(int)
+df['BloodPressure'] = (df['BloodPressure'] >= BLOOD_PRESSURE_THRESHOLD).astype(int)
+df['Age'] = (df['Age'] >= AGE_THRESHOLD).astype(int)
+df['Pregnancies'] = (df['Pregnancies'] >= PREGNANCIES_THRESHOLD).astype(int)
+df['Insulin'] = (df['Insulin'] >= INSULIN_THRESHOLD).astype(int)
+df['SkinThickness'] = (df['SkinThickness'] >= SKIN_THICKNESS_THRESHOLD).astype(int)
+df['DiabetesPedigreeFunction'] = (df['DiabetesPedigreeFunction'] >= PEDIGREE_FUNCTION_THRESHOLD).astype(int)
+
 # Diabetes (Outcome)
 model = BayesianNetwork([
-    ('Age', 'Pregnancies'), ('Age', 'Glucose'), ('Age', 'BloodPressure'), ('Age', 'Diabetes'), 
-    ('DiabetesPedigreeFunction', 'Diabetes'), ('DiabetesPedigreeFunction', 'BMI'), ('DiabetesPedigreeFunction', 'Insulin'),
-    ('BMI', 'SkinThickness'), ('BMI', 'BloodPressure'), ('BMI', 'Glucose'), ('BMI', 'Insulin'), ('BMI', 'Diabetes'),
-    ('Glucose', 'Insulin'), ('Glucose', 'Diabetes'),
-    ('Pregnancies', 'Diabetes')
+    ('Age', 'Pregnancies'), ('Age', 'Glucose'), ('Age', 'BloodPressure'), ('Age', 'Outcome'), 
+    ('DiabetesPedigreeFunction', 'Outcome'), ('DiabetesPedigreeFunction', 'BMI'), ('DiabetesPedigreeFunction', 'Insulin'),
+    ('BMI', 'SkinThickness'), ('BMI', 'BloodPressure'), ('BMI', 'Glucose'), ('BMI', 'Insulin'), ('BMI', 'Outcome'),
+    ('Glucose', 'Insulin'), ('Glucose', 'Outcome'),
+    ('Pregnancies', 'Outcome')
 ])
 
+model.fit(df, estimator=MaximumLikelihoodEstimator)
+model.check_model()
+
+# Result
+infer = VariableElimination(model)
+
+# P(Outcome | Age = 50, Glucose = 130, BMI = 29)
+dist_evidence = {
+    'Age': 50,
+    'Glucose': 130,
+    'BMI': 29
+}
+process(dist_evidence)
+w_dist = infer.query(['Outcome'], dist_evidence)
+print(w_dist)
