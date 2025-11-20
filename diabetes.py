@@ -41,8 +41,10 @@ def getThreshold(key: Any):
             return 0.0
 
 def process(evidence : dict):
+    processsed_evidence = {}
     for key in evidence:
-        evidence[key] = int(evidence[key] >= getThreshold(key))
+        processsed_evidence[key] = int(evidence[key] >= getThreshold(key))
+    return processsed_evidence
 
 # Read CSV
 df = pd.read_csv("diabetes_dataset.csv")
@@ -79,6 +81,6 @@ dist_evidence = {
     'Glucose': 130,
     'BMI': 29
 }
-process(dist_evidence)
+dist_evidence = process(dist_evidence)
 w_dist = infer.query(['Outcome'], dist_evidence)
 print(w_dist)
