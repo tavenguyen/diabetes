@@ -1,5 +1,7 @@
 <h1 align="center" id="title">Diabetes Probability</h1>
 
+<p align="center"><img src="https://img.shields.io/badge/python-3.10%2B-blue" alt="shields"><img src="https://img.shields.io/badge/License-MIT-yellow.svg" alt="shields"></p>
+
 <p id="description">This is very simple model used Bayesian network to predict Diabetes based on (Pregnancies, Glucose, Blood Pressure,Skin Thickness, Insulin, BMI, DiabetesPedigreeFunction, Age, Outcome).</p>
 
 | **Node**           	| **Threshold**   	| **Meaning**                                     	|
