@@ -1,5 +1,7 @@
 from pgmpy.models import DiscreteBayesianNetwork as BayesianNetwork
 from pgmpy.factors.discrete import TabularCPD
+import pandas as pd
+import numpy as np
 
 # Diabetes (Outcome)
 model = BayesianNetwork([
