@@ -1,5 +1,6 @@
 from pgmpy.models import DiscreteBayesianNetwork as BayesianNetwork
 from pgmpy.factors.discrete import TabularCPD
+from typing import Any
 import pandas as pd
 import numpy as np
 
@@ -15,12 +16,26 @@ INSULIN_THRESHOLD = 100
 SKIN_THICKNESS_THRESHOLD = 29
 PEDIGREE_FUNCTION_THRESHOLD = 0.47
 
-def calculateProbabilityOfNode(key):
-    pass
-
-# Read Dataset
-df = pd.read_csv("diabetes_dataset.csv")
-total_samples = len(df)
+def getThreshold(key: Any):
+    match key:
+        case 'Glucose':
+            return GLUCOSE_THRESHOLD
+        case 'BMI':
+            return BMI_THRESHOLD
+        case 'BloodPressure':
+            return BLOOD_PRESSURE_THRESHOLD
+        case 'Age':
+            return AGE_THRESHOLD
+        case 'Pregnancies':
+            return PREGNANCIES_THRESHOLD
+        case 'Insulin':
+            return INSULIN_THRESHOLD
+        case 'SkinThickness':
+            return SKIN_THICKNESS_THRESHOLD
+        case 'DiabetesPedigreeFunction':
+            return PEDIGREE_FUNCTION_THRESHOLD
+        case _:
+            return 0.0
 
 # Diabetes (Outcome)
 model = BayesianNetwork([
