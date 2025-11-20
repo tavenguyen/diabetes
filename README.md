@@ -72,6 +72,27 @@ print(cpd_C)
 | **C(0)** 	|   0.25   	|   0.25   	|    0.5   	| 0.3333333 	|
 | **C(1)** 	|   0.75   	|   0.75   	|    0.5   	| 0.6666666 	|
 
+### The Real Power of Bayesian Network
+```python
+# P(Outcome | Age = 50, Glucose = 130, BMI = 29)
+dist_evidence = {
+    'Age': 50,
+    'Glucose': 130,
+    'BMI': 29
+}
+process(dist_evidence)
+w_dist = infer.query(['Outcome'], dist_evidence)
+print(w_dist)
+```
+Sức mạnh thật sự của Bayesian Network mà các model khác không làm được đó là khả năng xử lý Dữ liệu Thiếu (Missing Data). 
+- Giả sử bệnh nhân đến khám. Họ có Tuổi, có BMI, nhưng chưa có kết quả xét nghiệm Glucose (vì chưa lấy máu).
+- Bayesian Network vẫn cho ra kết quả.
+- Ví dụ: Xóa dòng 'Glucose': 130 trong dist_evidence đi. Code vẫn chạy và ra kết quả. ĐÓ mới là sức mạnh. \
+
+Ngoài ra, Bayesian Network còn xử lý được Diagnostic Reasoning (Suy diễn ngược):
+- Ta hỏi ngược lại: "Nếu một người đã bị Tiểu đường (Outcome=1), xác suất người đó Béo phì (BMI=1) là bao nhiêu?"
+- `w_dist = infer.query(['BMI', evidence = {'Outcome': 1})`
+
 <h2>🛠️ Installation Steps:</h2>
 
 <p>1. Conda Environment</p>
