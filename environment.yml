@@ -1,0 +1,16 @@
+name: bayesian_nw
+channels:
+  - conda-forge
+  - defaults
+dependencies:
+  - python=3.10
+  - networkx
+  - scipy
+  - numpy
+  - matplotlib
+  - pandas
+  - pgmpy
+  - ipykernel
+  - opt_einsum
+  - pyro-ppl
+prefix: C:\Users\Admin\miniconda3\envs\bayesian_nw
